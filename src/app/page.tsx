@@ -4,7 +4,7 @@ import { ProjectCard } from '@/components/dashboard/project-card'
 import { FileCard } from '@/components/dashboard/file-card'
 import { AppCard } from '@/components/dashboard/app-card'
 import { Button } from '@/components/ui/button'
-import { Plus, FolderKanban, FileIcon, Grid } from 'lucide-react'
+import { Plus, Palette, PenTool, Layout, Monitor } from 'lucide-react'
 import Link from 'next/link'
 
 export default async function DashboardPage() {
@@ -53,26 +53,27 @@ export default async function DashboardPage() {
 
   } else {
     // ---------------------------------------------------------
-    // DUMMY DATA FOR PUBLIC DEMO MODE
+    // DUMMY DATA FOR CREATIVE SUITE DEMO
     // ---------------------------------------------------------
-    profile = { display_name: 'Demo User', avatar_url: null }
+    profile = { display_name: 'Creative Pro', avatar_url: null }
 
     projects = [
-      { id: '1', name: 'Website Redesign', description: 'Redesigning the corporate website', status: 'In Progress', due_date: '2025-12-25' },
-      { id: '2', name: 'Mobile App', description: 'Flutter app for iOS and Android', status: 'Planning', due_date: '2026-01-15' },
-      { id: '3', name: 'Marketing Campaign', description: 'Q4 Social Media Assets', status: 'Completed', due_date: '2025-11-30' },
+      { id: '1', name: 'Brand Identity', description: 'Rebranding for TechStart including logo and guidelines', status: 'In Progress', due_date: '2025-12-25' },
+      { id: '2', name: 'UI/UX Design', description: 'Mobile app interface design for Fintech client', status: 'Planning', due_date: '2026-01-15' },
+      { id: '3', name: 'Illustration Set', description: 'Vector assets for marketing campaign', status: 'Completed', due_date: '2025-11-30' },
     ] as any
 
     files = [
-      { id: '1', name: 'Proposal.pdf', size: 2400000, type: 'application/pdf', created_at: new Date().toISOString() },
-      { id: '2', name: 'Design_Mockup.png', size: 4100000, type: 'image/png', created_at: new Date().toISOString() },
-      { id: '3', name: 'Budget.xlsx', size: 1200000, type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', created_at: new Date().toISOString() },
+      { id: '1', name: 'Logo_Final.ai', size: 12400000, type: 'image/x-adobe-indesign', created_at: new Date().toISOString() },
+      { id: '2', name: 'App_Design.fig', size: 4500000, type: 'application/octet-stream', created_at: new Date().toISOString() },
+      { id: '3', name: 'Presentation.pdf', size: 8200000, type: 'application/pdf', created_at: new Date().toISOString() },
+      { id: '4', name: 'Assets_Export.zip', size: 156000000, type: 'application/zip', created_at: new Date().toISOString() },
     ] as any
 
     apps = [
-      { id: '1', name: 'Slack', description: 'Team communication', icon_url: null },
-      { id: '2', name: 'Notion', description: 'Notes & Wiki', icon_url: null },
-      { id: '3', name: 'Linear', description: 'Issue tracking', icon_url: null },
+      { id: '1', name: 'Figma', description: 'Interface Design', icon_url: null },
+      { id: '2', name: 'Photoshop', description: 'Image Editing', icon_url: null },
+      { id: '3', name: 'Illustrator', description: 'Vector Graphics', icon_url: null },
     ] as any
   }
 
@@ -80,24 +81,48 @@ export default async function DashboardPage() {
     <DashboardLayout user={profile}>
       <div className="p-8 space-y-8">
         {/* Welcome Section */}
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">
-            Welcome back, {profile?.display_name || 'Guest'}!
-          </h1>
-          <p className="text-gray-600 mt-2">
-            Here's what's happening with your projects today.
-          </p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">
+              Welcome back, {profile?.display_name || 'Creator'}!
+            </h1>
+            <p className="text-gray-600 mt-2">
+              Ready to create something amazing today?
+            </p>
+          </div>
+          <Button className="bg-black hover:bg-gray-800 text-white gap-2">
+            <Plus className="w-4 h-4" />
+            New Project
+          </Button>
         </div>
+
+        {/* Recent Apps */}
+        <section>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-semibold text-gray-900">Creative Tools</h2>
+            <Button variant="ghost" size="sm" asChild>
+              <Link href="/apps">View All</Link>
+            </Button>
+          </div>
+          {apps && apps.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {apps.map((app) => (
+                <AppCard key={app.id} app={app} />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12 bg-white rounded-lg border-2 border-dashed border-gray-300">
+              <p className="text-gray-500">No tools connected</p>
+            </div>
+          )}
+        </section>
 
         {/* Active Projects */}
         <section>
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-gray-900">Active Projects</h2>
-            <Button asChild>
-              <Link href="/projects">
-                <Plus className="w-4 h-4 mr-2" />
-                New Project
-              </Link>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-semibold text-gray-900">Recent Projects</h2>
+            <Button variant="ghost" size="sm" asChild>
+              <Link href="/projects">View All</Link>
             </Button>
           </div>
           {projects && projects.length > 0 ? (
@@ -110,7 +135,7 @@ export default async function DashboardPage() {
             <div className="text-center py-12 bg-white rounded-lg border-2 border-dashed border-gray-300">
               <p className="text-gray-500 mb-4">No projects yet</p>
               <Button asChild>
-                <Link href="/projects">Create your first project</Link>
+                <Link href="/projects">Start a project</Link>
               </Button>
             </div>
           )}
@@ -118,9 +143,9 @@ export default async function DashboardPage() {
 
         {/* Recent Files */}
         <section>
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-gray-900">Recent Files</h2>
-            <Button variant="outline" asChild>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-semibold text-gray-900">Recent Files</h2>
+            <Button variant="ghost" size="sm" asChild>
               <Link href="/files">View All</Link>
             </Button>
           </div>
@@ -133,27 +158,6 @@ export default async function DashboardPage() {
           ) : (
             <div className="text-center py-12 bg-white rounded-lg border-2 border-dashed border-gray-300">
               <p className="text-gray-500">No files yet</p>
-            </div>
-          )}
-        </section>
-
-        {/* Recent Apps */}
-        <section>
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-gray-900">Recent Apps</h2>
-            <Button variant="outline" asChild>
-              <Link href="/apps">View All</Link>
-            </Button>
-          </div>
-          {apps && apps.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {apps.map((app) => (
-                <AppCard key={app.id} app={app} />
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-12 bg-white rounded-lg border-2 border-dashed border-gray-300">
-              <p className="text-gray-500">No apps yet</p>
             </div>
           )}
         </section>
