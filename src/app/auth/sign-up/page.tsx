@@ -50,7 +50,7 @@ export default function SignUpPage() {
                         Create an account
                     </CardTitle>
                     <CardDescription className="text-center">
-                        Enter your details to get started with FreelancerOS
+                        Enter your details to get started with Personal OS
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
