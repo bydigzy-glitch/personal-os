@@ -38,11 +38,8 @@ const navigation = [
     { name: 'Home', href: '/', icon: Home },
     { name: 'My Team', href: '/team', icon: Users },
     { name: 'Messages', href: '/messages', icon: MessageSquare },
-    { name: 'Apps', href: '/apps', icon: Grid3x3, badge: '12' },
     { name: 'Files', href: '/files', icon: FileText },
     { name: 'Projects', href: '/projects', icon: FolderKanban, badge: '3' },
-    { name: 'Learn', href: '/learn', icon: BookOpen },
-    { name: 'Community', href: '/community', icon: Users },
     { name: 'Resources', href: '/resources', icon: Library },
     { name: 'Settings', href: '/settings', icon: Settings },
 ]
@@ -174,6 +171,12 @@ export function DashboardLayout({ children, user }: DashboardLayoutProps) {
                     </div>
 
                     <div className="flex items-center gap-2 ml-auto">
+                        <Button variant="ghost" size="icon" asChild>
+                            <Link href="/messages">
+                                <MessageSquare className="w-5 h-5" />
+                                <span className="sr-only">Messages</span>
+                            </Link>
+                        </Button>
                         <NotificationsMenu />
                         <ModeToggle />
                     </div>

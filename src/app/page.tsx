@@ -16,7 +16,6 @@ export default async function DashboardPage() {
   let profile = null
   let projects: any[] = []
   let files: any[] = []
-  let apps: any[] = []
   let tasks: any[] = []
 
   if (user) {
@@ -43,14 +42,6 @@ export default async function DashboardPage() {
       .limit(4)
     files = fetchedFiles || []
 
-    const { data: fetchedApps } = await supabase
-      .from('apps')
-      .select('*')
-      .eq('user_id', user.id)
-      .order('created_at', { ascending: false })
-      .limit(6)
-    apps = fetchedApps || []
-
     const { data: fetchedTasks } = await supabase
       .from('tasks')
       .select('*')
@@ -76,12 +67,6 @@ export default async function DashboardPage() {
       { id: '2', name: 'App_Design.fig', size: 4500000, type: 'application/octet-stream', created_at: new Date().toISOString() },
       { id: '3', name: 'Presentation.pdf', size: 8200000, type: 'application/pdf', created_at: new Date().toISOString() },
       { id: '4', name: 'Assets_Export.zip', size: 156000000, type: 'application/zip', created_at: new Date().toISOString() },
-    ] as any
-
-    apps = [
-      { id: '1', name: 'Figma', description: 'Interface Design', icon_url: null, category: 'design' },
-      { id: '2', name: 'Photoshop', description: 'Image Editing', icon_url: null, category: 'design' },
-      { id: '3', name: 'Illustrator', description: 'Vector Graphics', icon_url: null, category: 'design' },
     ] as any
 
     tasks = [
@@ -141,29 +126,8 @@ export default async function DashboardPage() {
         </section>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Recent Apps */}
-          <section>
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-semibold">Creative Tools</h2>
-              <Button variant="ghost" size="sm" asChild>
-                <Link href="/apps">View All</Link>
-              </Button>
-            </div>
-            {apps && apps.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {apps.map((app) => (
-                  <AppCard key={app.id} app={app} />
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-12 bg-card rounded-lg border-2 border-dashed border-border">
-                <p className="text-muted-foreground">No tools connected</p>
-              </div>
-            )}
-          </section>
-
           {/* Recent Files */}
-          <section>
+          <section className="col-span-full">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-semibold">Recent Files</h2>
               <Button variant="ghost" size="sm" asChild>

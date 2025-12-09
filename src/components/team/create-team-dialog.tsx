@@ -22,8 +22,17 @@ export function CreateTeamDialog() {
         setLoading(true)
 
         try {
+            console.log('Starting team creation...')
             const { data: { user } } = await supabase.auth.getUser()
-            if (!user) return
+
+            if (!user) {
+                console.error('No authenticated user found')
+                alert('Please sign in to create a team')
+                router.push('/auth/sign-in')
+                return
+            }
+
+            console.log('User found:', user.id)
 
             // 1. Create Team
             const { data: team, error: teamError } = await supabase
