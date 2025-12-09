@@ -54,18 +54,9 @@ export const columns: ColumnDef<Task>[] = [
     },
     {
         accessorKey: "title",
-        header: ({ column }) => {
-            return (
-                <Button
-                    variant="ghost"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                    className="-ml-3"
-                >
-                    Title
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            )
-        },
+        header: ({ column }) => (
+            <DataTableColumnHeader column={column} title="Title" />
+        ),
         cell: ({ row }) => {
             // Mock 'Type' based on title or random? Or just add a badge.
             // Screenshot had 'Type' column. I'll mock it for now.

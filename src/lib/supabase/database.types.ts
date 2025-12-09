@@ -80,6 +80,7 @@ export type Database = {
                     type: string
                     supabase_path: string
                     created_at: string
+                    size: number
                 }
                 Insert: {
                     id?: string
@@ -89,6 +90,7 @@ export type Database = {
                     type: string
                     supabase_path: string
                     created_at?: string
+                    size?: number
                 }
                 Update: {
                     id?: string
@@ -98,6 +100,7 @@ export type Database = {
                     type?: string
                     supabase_path?: string
                     created_at?: string
+                    size?: number
                 }
                 Relationships: [
                     {

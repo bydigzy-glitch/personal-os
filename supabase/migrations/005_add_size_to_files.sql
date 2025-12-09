@@ -1,0 +1,1 @@
+ALTER TABLE public.files ADD COLUMN size BIGINT DEFAULT 0;

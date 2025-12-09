@@ -2,14 +2,6 @@
 
 import * as React from "react"
 import {
-    CalendarIcon,
-    EnvelopeClosedIcon,
-    FaceIcon,
-    GearIcon,
-    PersonIcon,
-    RocketIcon,
-} from "@radix-ui/react-icons"
-import {
     Calculator,
     CreditCard,
     Settings,
@@ -19,7 +11,10 @@ import {
     FolderKanban,
     Grid3x3,
     BookOpen,
-    Smile
+    Smile,
+    Calendar,
+    Mail,
+    Rocket
 } from "lucide-react"
 
 import {
@@ -68,7 +63,7 @@ export function CommandMenu() {
                     <CommandEmpty>No results found.</CommandEmpty>
                     <CommandGroup heading="Suggestions">
                         <CommandItem>
-                            <CalendarIcon className="mr-2 h-4 w-4" />
+                            <Calendar className="mr-2 h-4 w-4" />
                             <span>Calendar</span>
                         </CommandItem>
                         <CommandItem>
