@@ -65,8 +65,9 @@ export function CreateTeamDialog() {
             // Force reload to pick up new team state immediately since hooks run on mount
             window.location.reload()
 
-        } catch (error) {
+        } catch (error: any) {
             console.error('Failed to create team:', error)
+            alert(`Failed to create team. Error: ${error.message || JSON.stringify(error)}`)
         } finally {
             setLoading(false)
         }
