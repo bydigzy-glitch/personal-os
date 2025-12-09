@@ -112,7 +112,7 @@ export function DashboardLayout({ children, user }: DashboardLayoutProps) {
                                 <Avatar className="w-10 h-10">
                                     <AvatarImage src={user?.avatar_url || ''} />
                                     <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white">
-                                        {user?.display_name?.[0]?.toUpperCase() || 'U'}
+                                        {(user?.display_name || 'User').charAt(0).toUpperCase()}
                                     </AvatarFallback>
                                 </Avatar>
                                 <div className="flex-1 text-left">
