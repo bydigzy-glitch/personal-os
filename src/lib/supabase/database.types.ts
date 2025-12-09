@@ -465,7 +465,15 @@ export type Database = {
             [_ in never]: never
         }
         Functions: {
-            [_ in never]: never
+            get_team_leaderboard: {
+                Args: {
+                    p_team_id: string
+                }
+                Returns: {
+                    user_id: string
+                    score: number
+                }[]
+            }
         }
         Enums: {
             project_status: 'active' | 'paused' | 'completed'

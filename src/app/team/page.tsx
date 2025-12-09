@@ -141,7 +141,7 @@ export default function TeamPage() {
                         {/* Left Col: Members */}
                         <div className="space-y-6">
                             <MemberList members={members} />
-                            <TeamLeaderboard members={members} />
+                            <TeamLeaderboard members={members} teamId={team.id} />
                         </div>
 
                         {/* Middle Col: Tasks */}
