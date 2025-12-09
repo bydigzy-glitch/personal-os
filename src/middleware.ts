@@ -34,25 +34,9 @@ export async function middleware(request: NextRequest) {
         data: { user },
     } = await supabase.auth.getUser()
 
-    // Protected routes
-    const protectedPaths = ['/', '/projects', '/files', '/apps', '/settings']
-    const isProtectedPath = protectedPaths.some(path =>
-        request.nextUrl.pathname === path || request.nextUrl.pathname.startsWith(path + '/')
-    )
-
-    // Redirect to sign-in if not authenticated and trying to access protected route
-    if (!user && isProtectedPath) {
-        const url = request.nextUrl.clone()
-        url.pathname = '/auth/sign-in'
-        return NextResponse.redirect(url)
-    }
-
-    // Redirect to dashboard if authenticated and trying to access auth pages
-    if (user && request.nextUrl.pathname.startsWith('/auth')) {
-        const url = request.nextUrl.clone()
-        url.pathname = '/'
-        return NextResponse.redirect(url)
-    }
+    // Protected routes logic removed to allow public access
+    // if (!user && isProtectedPath) { ... }
+    // if (user && request.nextUrl.pathname.startsWith('/auth')) { ... }
 
     return supabaseResponse
 }
