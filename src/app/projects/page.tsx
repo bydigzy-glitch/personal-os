@@ -1,70 +1,105 @@
-import { createClient } from '@/lib/supabase/server'
-import { redirect } from 'next/navigation'
+'use client'
+
 import { DashboardLayout } from '@/components/dashboard/dashboard-layout'
-import { ProjectCard } from '@/components/dashboard/project-card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Plus } from 'lucide-react'
-import Link from 'next/link'
-import { CreateProjectDialog } from '@/components/projects/create-project-dialog'
+import { Plus, FolderKanban, Clock, User as UserIcon } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { createClient } from '@/lib/supabase/client'
+import { Badge } from '@/components/ui/badge'
 
-export default async function ProjectsPage() {
-    const supabase = await createClient()
-
-    const {
-        data: { user },
-    } = await supabase.auth.getUser()
-
-    if (!user) {
-        redirect('/auth/sign-in')
+const dummyProjects = [
+    {
+        id: '1',
+        title: 'Website Redesign',
+        description: 'Redesigning the corporate website with a modern look and improved performance.',
+        status: 'In Progress',
+        dueDate: 'Dec 25, 2025',
+        client: 'Acme Corp'
+    },
+    {
+        id: '2',
+        title: 'Mobile App Development',
+        description: 'Building a cross-platform mobile app for the new product launch.',
+        status: 'Planning',
+        dueDate: 'Jan 15, 2026',
+        client: 'TechStart'
+    },
+    {
+        id: '3',
+        title: 'Marketing Campaign',
+        description: 'Q4 marketing campaign assets and social media strategy.',
+        status: 'Completed',
+        dueDate: 'Nov 30, 2025',
+        client: 'Global Retail'
     }
+]
 
-    const { data: profile } = await supabase
-        .from('users')
-        .select('*')
-        .eq('id', user.id)
-        .single()
+export default function ProjectsPage() {
+    const [user, setUser] = useState<any>(null)
+    const supabase = createClient()
 
-    const { data: projects } = await supabase
-        .from('projects')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('updated_at', { ascending: false })
+    useEffect(() => {
+        const getUser = async () => {
+            const { data: { user } } = await supabase.auth.getUser()
+            if (user) {
+                const { data: profile } = await supabase
+                    .from('users')
+                    .select('*')
+                    .eq('id', user.id)
+                    .single()
+                setUser(profile)
+            }
+        }
+        getUser()
+    }, [supabase])
 
     return (
-        <DashboardLayout user={profile}>
-            <div className="p-8 space-y-8">
+        <DashboardLayout user={user}>
+            <div className="p-8 max-w-7xl mx-auto space-y-8">
                 <div className="flex items-center justify-between">
                     <div>
-                        <h1 className="text-3xl font-bold text-gray-900">Projects</h1>
-                        <p className="text-gray-600 mt-2">
-                            Manage and track all your creative projects
-                        </p>
+                        <h2 className="text-3xl font-bold tracking-tight text-gray-900">Projects</h2>
+                        <p className="text-gray-500 mt-2">Manage your ongoing projects and tasks.</p>
                     </div>
-                    <CreateProjectDialog />
+                    <Button className="bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+                        <Plus className="w-4 h-4 mr-2" />
+                        New Project
+                    </Button>
                 </div>
 
-                {projects && projects.length > 0 ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {projects.map((project) => (
-                            <ProjectCard key={project.id} project={project} />
-                        ))}
-                    </div>
-                ) : (
-                    <div className="text-center py-24 bg-white rounded-lg border-2 border-dashed border-gray-300">
-                        <div className="max-w-md mx-auto space-y-4">
-                            <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto">
-                                <Plus className="w-8 h-8 text-blue-600" />
-                            </div>
-                            <h3 className="text-xl font-semibold text-gray-900">
-                                No projects yet
-                            </h3>
-                            <p className="text-gray-500">
-                                Get started by creating your first project
-                            </p>
-                            <CreateProjectDialog />
-                        </div>
-                    </div>
-                )}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {dummyProjects.map((project) => (
+                        <Card key={project.id} className="hover:shadow-md transition-shadow cursor-pointer">
+                            <CardHeader className="pb-4">
+                                <div className="flex justify-between items-start mb-2">
+                                    <Badge variant={project.status === 'Completed' ? 'secondary' : 'default'} className={project.status === 'In Progress' ? 'bg-blue-100 text-blue-800' : ''}>
+                                        {project.status}
+                                    </Badge>
+                                </div>
+                                <CardTitle className="text-xl flex items-center gap-2">
+                                    <FolderKanban className="w-5 h-5 text-gray-500" />
+                                    {project.title}
+                                </CardTitle>
+                                <CardDescription className="mt-2 line-clamp-2">
+                                    {project.description}
+                                </CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="flex flex-col gap-2 text-sm text-gray-500">
+                                    <div className="flex items-center gap-2">
+                                        <Clock className="w-4 h-4" />
+                                        <span>Due: {project.dueDate}</span>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <UserIcon className="w-4 h-4" />
+                                        <span>Client: {project.client}</span>
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    ))}
+                </div>
             </div>
         </DashboardLayout>
     )
