@@ -14,6 +14,7 @@ import {
     Settings,
     Search,
     LogOut,
+    MessageSquare,
 } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
@@ -32,6 +33,8 @@ import { useRouter } from 'next/navigation'
 
 const navigation = [
     { name: 'Home', href: '/', icon: Home },
+    { name: 'My Team', href: '/team', icon: Users },
+    { name: 'Messages', href: '/messages', icon: MessageSquare },
     { name: 'Apps', href: '/apps', icon: Grid3x3, badge: '12' },
     { name: 'Files', href: '/files', icon: FileText },
     { name: 'Projects', href: '/projects', icon: FolderKanban, badge: '3' },
