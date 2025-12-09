@@ -71,9 +71,9 @@ export default async function DashboardPage() {
     ] as any
 
     apps = [
-      { id: '1', name: 'Figma', description: 'Interface Design', icon_url: null },
-      { id: '2', name: 'Photoshop', description: 'Image Editing', icon_url: null },
-      { id: '3', name: 'Illustrator', description: 'Vector Graphics', icon_url: null },
+      { id: '1', name: 'Figma', description: 'Interface Design', icon_url: null, category: 'design' },
+      { id: '2', name: 'Photoshop', description: 'Image Editing', icon_url: null, category: 'design' },
+      { id: '3', name: 'Illustrator', description: 'Vector Graphics', icon_url: null, category: 'design' },
     ] as any
   }
 
