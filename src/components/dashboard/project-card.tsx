@@ -1,64 +1,92 @@
-'use client'
+"use client"
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Progress } from '@/components/ui/progress'
+import { Calendar, MoreHorizontal, ArrowRight, FolderKanban } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Calendar, Users, FileText, MoreVertical } from 'lucide-react'
-import Link from 'next/link'
-import type { Database } from '@/lib/supabase/database.types'
-
-type Project = Database['public']['Tables']['projects']['Row']
+import { Progress } from '@/components/ui/progress'
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { useState } from 'react'
+import { ProjectDetailDialog } from './project-detail-dialog'
 
 interface ProjectCardProps {
-    project: Project
+    project: {
+        id: string
+        name: string
+        description?: string | null
+        status?: string | null
+        due_date?: string | null
+        progress?: number
+    }
 }
 
 export function ProjectCard({ project }: ProjectCardProps) {
-    const statusColors = {
-        active: 'bg-green-100 text-green-800',
-        paused: 'bg-yellow-100 text-yellow-800',
-        completed: 'bg-blue-100 text-blue-800',
-    }
+    const [open, setOpen] = useState(false)
+
+    const progress = project.progress || Math.floor(Math.random() * 100)
 
     return (
-        <Link href={`/projects/${project.id}`}>
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+        <>
+            <Card
+                className="group relative flex flex-col transition-all duration-300 hover:shadow-lg hover:-translate-y-1 cursor-pointer bg-card border-border"
+                onClick={() => setOpen(true)}
+            >
                 <CardHeader className="pb-3">
-                    <div className="flex items-start justify-between">
-                        <div className="space-y-1">
-                            <CardTitle className="text-lg">{project.title}</CardTitle>
-                            <p className="text-sm text-gray-500 line-clamp-2">
-                                {project.description}
-                            </p>
+                    <div className="flex justify-between items-start">
+                        <div className="p-2 rounded-lg bg-primary/10 text-primary">
+                            <FolderKanban className="w-5 h-5" />
                         </div>
-                        <Button variant="ghost" size="icon" className="h-8 w-8">
-                            <MoreVertical className="h-4 w-4" />
-                        </Button>
+                        <div onClick={(e) => e.stopPropagation()}>
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button variant="ghost" size="icon" className="h-8 w-8 -mr-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <MoreHorizontal className="h-4 w-4" />
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end">
+                                    <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                                    <DropdownMenuItem onClick={() => setOpen(true)}>Open Project</DropdownMenuItem>
+                                    <DropdownMenuItem>Edit Details</DropdownMenuItem>
+                                    <DropdownMenuItem>View Team</DropdownMenuItem>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem className="text-destructive">Archive</DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        </div>
                     </div>
+                    <CardTitle className="mt-4 text-lg font-bold">{project.name}</CardTitle>
+                    <CardDescription className="line-clamp-2 mt-1 min-h-[40px]">
+                        {project.description || 'No description'}
+                    </CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                    <div className="space-y-2">
-                        <div className="flex items-center justify-between text-sm">
-                            <span className="text-gray-600">Progress</span>
-                            <span className="font-medium">{project.progress}%</span>
+                <CardContent className="pb-4 flex-1">
+                    <div className="space-y-4">
+                        <div className="flex justify-between text-xs text-muted-foreground">
+                            <span>Progress</span>
+                            <span>{progress}%</span>
                         </div>
-                        <Progress value={project.progress} className="h-2" />
-                    </div>
-
-                    <div className="flex items-center justify-between">
-                        <Badge className={statusColors[project.status]}>
-                            {project.status.charAt(0).toUpperCase() + project.status.slice(1)}
-                        </Badge>
-                        <div className="flex items-center gap-4 text-sm text-gray-500">
-                            <div className="flex items-center gap-1">
-                                <Calendar className="w-4 h-4" />
-                                <span>{new Date(project.created_at).toLocaleDateString()}</span>
-                            </div>
-                        </div>
+                        <Progress value={progress} className="h-2" />
                     </div>
                 </CardContent>
+                <CardFooter className="pt-0 border-t border-border/50 p-4 bg-muted/20 flex items-center justify-between">
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                        <Calendar className="w-3 h-3" />
+                        {project.due_date ? new Date(project.due_date).toLocaleDateString() : 'No deadline'}
+                    </div>
+                    <Badge variant={project.status === 'Completed' ? 'default' : 'secondary'} className="text-[10px] px-2 h-5">
+                        {project.status || 'Active'}
+                    </Badge>
+                </CardFooter>
             </Card>
-        </Link>
+
+            <ProjectDetailDialog project={project} open={open} onOpenChange={setOpen} />
+        </>
     )
 }

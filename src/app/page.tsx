@@ -4,22 +4,22 @@ import { ProjectCard } from '@/components/dashboard/project-card'
 import { FileCard } from '@/components/dashboard/file-card'
 import { AppCard } from '@/components/dashboard/app-card'
 import { Button } from '@/components/ui/button'
-import { Plus, Palette, PenTool, Layout, Monitor } from 'lucide-react'
+import { Plus } from 'lucide-react'
 import Link from 'next/link'
+import { DashboardTasks } from '@/components/dashboard/dashboard-tasks'
 
 export default async function DashboardPage() {
   const supabase = await createClient()
 
-  // Try to get real user, but don't enforce it
   const { data: { user } } = await supabase.auth.getUser()
 
   let profile = null
   let projects: any[] = []
   let files: any[] = []
   let apps: any[] = []
+  let tasks: any[] = []
 
   if (user) {
-    // Real Data Fetching if User Exists
     const { data: fetchedProfile } = await supabase
       .from('users')
       .select('*')
@@ -51,6 +51,14 @@ export default async function DashboardPage() {
       .limit(6)
     apps = fetchedApps || []
 
+    const { data: fetchedTasks } = await supabase
+      .from('tasks')
+      .select('*')
+      .or(`assigned_to_user_id.eq.${user.id},created_by.eq.${user.id}`)
+      .order('created_at', { ascending: false })
+      .limit(10)
+    tasks = fetchedTasks || []
+
   } else {
     // ---------------------------------------------------------
     // DUMMY DATA FOR CREATIVE SUITE DEMO
@@ -75,52 +83,43 @@ export default async function DashboardPage() {
       { id: '2', name: 'Photoshop', description: 'Image Editing', icon_url: null, category: 'design' },
       { id: '3', name: 'Illustrator', description: 'Vector Graphics', icon_url: null, category: 'design' },
     ] as any
+
+    tasks = [
+      { id: '1', title: 'Review Homepage Mockups', status: 'todo', assigned_to: 'me', due_date: '2025-12-12', created_at: new Date().toISOString() },
+      { id: '2', title: 'Export Assets for Dev', status: 'in_progress', assigned_to: 'me', due_date: '2025-12-14', created_at: new Date().toISOString() },
+      { id: '3', title: 'Client Meeting Preparation', status: 'done', assigned_to: 'me', due_date: '2025-12-10', created_at: new Date().toISOString() },
+      { id: '4', title: 'Update Design System', status: 'todo', assigned_to: 'team', due_date: '2025-12-20', created_at: new Date().toISOString() },
+    ] as any
   }
 
   return (
     <DashboardLayout user={profile}>
-      <div className="p-8 space-y-8">
+      <div className="p-8 space-y-8 max-w-7xl mx-auto">
         {/* Welcome Section */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">
+            <h1 className="text-3xl font-bold tracking-tight">
               Welcome back, {profile?.display_name || 'Creator'}!
             </h1>
-            <p className="text-gray-600 mt-2">
+            <p className="text-muted-foreground mt-2">
               Ready to create something amazing today?
             </p>
           </div>
-          <Button className="bg-black hover:bg-gray-800 text-white gap-2">
+          <Button className="bg-primary text-primary-foreground hover:bg-primary/90 gap-2">
             <Plus className="w-4 h-4" />
             New Project
           </Button>
         </div>
 
-        {/* Recent Apps */}
+        {/* Tasks Section (New) */}
         <section>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold text-gray-900">Creative Tools</h2>
-            <Button variant="ghost" size="sm" asChild>
-              <Link href="/apps">View All</Link>
-            </Button>
-          </div>
-          {apps && apps.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {apps.map((app) => (
-                <AppCard key={app.id} app={app} />
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-12 bg-white rounded-lg border-2 border-dashed border-gray-300">
-              <p className="text-gray-500">No tools connected</p>
-            </div>
-          )}
+          <DashboardTasks tasks={tasks} />
         </section>
 
         {/* Active Projects */}
         <section>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold text-gray-900">Recent Projects</h2>
+            <h2 className="text-xl font-semibold">Recent Projects</h2>
             <Button variant="ghost" size="sm" asChild>
               <Link href="/projects">View All</Link>
             </Button>
@@ -132,8 +131,8 @@ export default async function DashboardPage() {
               ))}
             </div>
           ) : (
-            <div className="text-center py-12 bg-white rounded-lg border-2 border-dashed border-gray-300">
-              <p className="text-gray-500 mb-4">No projects yet</p>
+            <div className="text-center py-12 bg-card rounded-lg border-2 border-dashed border-border">
+              <p className="text-muted-foreground mb-4">No projects yet</p>
               <Button asChild>
                 <Link href="/projects">Start a project</Link>
               </Button>
@@ -141,26 +140,49 @@ export default async function DashboardPage() {
           )}
         </section>
 
-        {/* Recent Files */}
-        <section>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold text-gray-900">Recent Files</h2>
-            <Button variant="ghost" size="sm" asChild>
-              <Link href="/files">View All</Link>
-            </Button>
-          </div>
-          {files && files.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {files.map((file) => (
-                <FileCard key={file.id} file={file} />
-              ))}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Recent Apps */}
+          <section>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-semibold">Creative Tools</h2>
+              <Button variant="ghost" size="sm" asChild>
+                <Link href="/apps">View All</Link>
+              </Button>
             </div>
-          ) : (
-            <div className="text-center py-12 bg-white rounded-lg border-2 border-dashed border-gray-300">
-              <p className="text-gray-500">No files yet</p>
+            {apps && apps.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {apps.map((app) => (
+                  <AppCard key={app.id} app={app} />
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12 bg-card rounded-lg border-2 border-dashed border-border">
+                <p className="text-muted-foreground">No tools connected</p>
+              </div>
+            )}
+          </section>
+
+          {/* Recent Files */}
+          <section>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-semibold">Recent Files</h2>
+              <Button variant="ghost" size="sm" asChild>
+                <Link href="/files">View All</Link>
+              </Button>
             </div>
-          )}
-        </section>
+            {files && files.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {files.map((file) => (
+                  <FileCard key={file.id} file={file} />
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12 bg-card rounded-lg border-2 border-dashed border-border">
+                <p className="text-muted-foreground">No files yet</p>
+              </div>
+            )}
+          </section>
+        </div>
       </div>
     </DashboardLayout>
   )
