@@ -10,6 +10,7 @@ import { TeamTasks } from '@/components/team/team-tasks'
 import { TeamChat } from '@/components/team/team-chat'
 import { TeamLeaderboard } from '@/components/team/team-leaderboard'
 import { TeamEvents } from '@/components/team/team-events'
+import { CreateTeamDialog } from '@/components/team/create-team-dialog'
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
@@ -45,9 +46,7 @@ export default function TeamPage() {
                     </div>
                     <h2 className="text-2xl font-bold font-heading">You are not part of a team yet</h2>
                     <p className="text-gray-500 max-w-sm">Create a new team to start collaborating with others, or ask an admin to invite you.</p>
-                    <Button className="bg-black hover:bg-gray-800 text-white">
-                        Create Team
-                    </Button>
+                    <CreateTeamDialog />
                 </div>
             </DashboardLayout>
         )
