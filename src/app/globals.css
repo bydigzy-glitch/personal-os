@@ -122,6 +122,37 @@
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
   }
+
+  /* Force global heading colors to avoid hardcoded styles breaking dark mode */
+  h1, h2, h3, h4, h5, h6 {
+    color: var(--foreground) !important;
+  }
+}
+
+/* Hardcoded overrides for dark mode safety */
+.dark .text-gray-900,
+.dark .text-gray-800 {
+  color: var(--foreground) !important;
+}
+
+.dark .text-gray-700,
+.dark .text-gray-600,
+.dark .text-gray-500 {
+  color: var(--muted-foreground) !important;
+}
+
+.dark .bg-white {
+  background-color: var(--card) !important;
+}
+
+.dark .bg-gray-50,
+.dark .bg-gray-100 {
+  background-color: var(--muted) !important;
+}
+
+.dark .border-gray-100,
+.dark .border-gray-200 {
+  border-color: var(--border) !important;
 }
 
 /* Emil Kowalski motion principles */
