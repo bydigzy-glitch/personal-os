@@ -1,20 +1,17 @@
 "use client"
 
 import * as React from "react"
+import { useRouter } from "next/navigation"
 import {
-    Calculator,
-    CreditCard,
     Settings,
     User,
-    Search,
     FileText,
     FolderKanban,
-    Grid3x3,
-    BookOpen,
-    Smile,
     Calendar,
-    Mail,
-    Rocket
+    CreditCard,
+    Wrench,
+    Library,
+    Plus,
 } from "lucide-react"
 
 import {
@@ -31,6 +28,7 @@ import { Button } from "@/components/ui/button"
 
 export function CommandMenu() {
     const [open, setOpen] = React.useState(false)
+    const router = useRouter()
 
     React.useEffect(() => {
         const down = (e: KeyboardEvent) => {
@@ -44,14 +42,19 @@ export function CommandMenu() {
         return () => document.removeEventListener("keydown", down)
     }, [])
 
+    const runCommand = (command: () => void) => {
+        setOpen(false)
+        command()
+    }
+
     return (
         <>
             <Button
                 variant="outline"
-                className="relative w-full justify-start text-sm text-muted-foreground sm:pr-12 md:w-40 lg:w-64 bg-background/50 hover:bg-accent/50"
+                className="relative w-full justify-start text-sm text-muted-foreground sm:pr-12 md:w-40 lg:w-64 bg-background/50 hover:bg-accent/50 rounded-xl"
                 onClick={() => setOpen(true)}
             >
-                <span className="hidden lg:inline-flex">Search...</span>
+                <span className="hidden lg:inline-flex">Search everything...</span>
                 <span className="inline-flex lg:hidden">Search...</span>
                 <kbd className="pointer-events-none absolute right-1.5 top-1.5 hidden h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex">
                     <span className="text-xs">⌘</span>K
@@ -59,52 +62,51 @@ export function CommandMenu() {
             </Button>
             <CommandDialog open={open} onOpenChange={setOpen}>
                 <CommandInput placeholder="Type a command or search..." />
-                <CommandList>
+                <CommandList className="max-h-[400px]">
                     <CommandEmpty>No results found.</CommandEmpty>
-                    <CommandGroup heading="Suggestions">
-                        <CommandItem>
-                            <Calendar className="mr-2 h-4 w-4" />
-                            <span>Calendar</span>
+                    <CommandGroup heading="Quick Actions">
+                        <CommandItem onSelect={() => runCommand(() => router.push('/projects'))}>
+                            <Plus className="mr-2 h-4 w-4" />
+                            <span>Create New Project</span>
                         </CommandItem>
-                        <CommandItem>
-                            <Smile className="mr-2 h-4 w-4" />
-                            <span>Search Emoji</span>
-                        </CommandItem>
-                        <CommandItem>
-                            <Calculator className="mr-2 h-4 w-4" />
-                            <span>Calculator</span>
+                        <CommandItem onSelect={() => runCommand(() => router.push('/billing'))}>
+                            <Plus className="mr-2 h-4 w-4" />
+                            <span>New Invoice</span>
                         </CommandItem>
                     </CommandGroup>
                     <CommandSeparator />
                     <CommandGroup heading="Navigation">
-                        <CommandItem>
-                            <Grid3x3 className="mr-2 h-4 w-4" />
-                            <span>Apps</span>
-                            <CommandShortcut>⌘A</CommandShortcut>
+                        <CommandItem onSelect={() => runCommand(() => router.push('/calendar'))}>
+                            <Calendar className="mr-2 h-4 w-4" />
+                            <span>Timeline</span>
+                            <CommandShortcut>⌘T</CommandShortcut>
                         </CommandItem>
-                        <CommandItem>
+                        <CommandItem onSelect={() => runCommand(() => router.push('/projects'))}>
                             <FolderKanban className="mr-2 h-4 w-4" />
                             <span>Projects</span>
                             <CommandShortcut>⌘P</CommandShortcut>
                         </CommandItem>
-                        <CommandItem>
+                        <CommandItem onSelect={() => runCommand(() => router.push('/billing'))}>
+                            <CreditCard className="mr-2 h-4 w-4" />
+                            <span>Billing & Finance</span>
+                            <CommandShortcut>⌘B</CommandShortcut>
+                        </CommandItem>
+                        <CommandItem onSelect={() => runCommand(() => router.push('/tools'))}>
+                            <Wrench className="mr-2 h-4 w-4" />
+                            <span>Utility Suite</span>
+                        </CommandItem>
+                        <CommandItem onSelect={() => runCommand(() => router.push('/files'))}>
                             <FileText className="mr-2 h-4 w-4" />
-                            <span>Files</span>
+                            <span>Asset Library</span>
+                        </CommandItem>
+                        <CommandItem onSelect={() => runCommand(() => router.push('/resources'))}>
+                            <Library className="mr-2 h-4 w-4" />
+                            <span>Inspiration Hub</span>
                         </CommandItem>
                     </CommandGroup>
                     <CommandSeparator />
-                    <CommandGroup heading="Settings">
-                        <CommandItem>
-                            <User className="mr-2 h-4 w-4" />
-                            <span>Profile</span>
-                            <CommandShortcut>⌘P</CommandShortcut>
-                        </CommandItem>
-                        <CommandItem>
-                            <CreditCard className="mr-2 h-4 w-4" />
-                            <span>Billing</span>
-                            <CommandShortcut>⌘B</CommandShortcut>
-                        </CommandItem>
-                        <CommandItem>
+                    <CommandGroup heading="Account">
+                        <CommandItem onSelect={() => runCommand(() => router.push('/settings'))}>
                             <Settings className="mr-2 h-4 w-4" />
                             <span>Settings</span>
                             <CommandShortcut>⌘S</CommandShortcut>

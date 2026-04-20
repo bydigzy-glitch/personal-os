@@ -5,15 +5,14 @@ import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import {
     Home,
-    FolderKanban,
+    Calendar,
+    CreditCard,
+    Wrench,
     FileText,
-    Grid3x3,
-    BookOpen,
-    Users,
+    FolderKanban,
     Library,
     Settings,
     LogOut,
-    MessageSquare,
     Menu
 } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -36,10 +35,11 @@ import { CommandMenu } from './command-menu'
 
 const navigation = [
     { name: 'Home', href: '/', icon: Home },
-    { name: 'My Team', href: '/team', icon: Users },
-    { name: 'Messages', href: '/messages', icon: MessageSquare },
-    { name: 'Files', href: '/files', icon: FileText },
+    { name: 'Calendar', href: '/calendar', icon: Calendar },
     { name: 'Projects', href: '/projects', icon: FolderKanban, badge: '3' },
+    { name: 'Billing', href: '/billing', icon: CreditCard },
+    { name: 'Files', href: '/files', icon: FileText },
+    { name: 'Tools', href: '/tools', icon: Wrench },
     { name: 'Resources', href: '/resources', icon: Library },
     { name: 'Settings', href: '/settings', icon: Settings },
 ]
@@ -66,11 +66,11 @@ export function DashboardLayout({ children, user }: DashboardLayoutProps) {
         <>
             <div className="h-16 flex items-center px-6 border-b border-border">
                 <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-primary-foreground font-bold">
-                        C
+                    <div className="w-8 h-8 bg-black dark:bg-white rounded-lg flex items-center justify-center text-white dark:text-black font-black">
+                        F
                     </div>
                     <h1 className="text-xl font-bold tracking-tight">
-                        Creative Suite
+                        Freelance OS
                     </h1>
                 </div>
             </div>
@@ -171,12 +171,6 @@ export function DashboardLayout({ children, user }: DashboardLayoutProps) {
                     </div>
 
                     <div className="flex items-center gap-2 ml-auto">
-                        <Button variant="ghost" size="icon" asChild>
-                            <Link href="/messages">
-                                <MessageSquare className="w-5 h-5" />
-                                <span className="sr-only">Messages</span>
-                            </Link>
-                        </Button>
                         <NotificationsMenu />
                         <ModeToggle />
                     </div>
