@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Calendar, MoreHorizontal, ArrowRight, FolderKanban } from 'lucide-react'
+import { Calendar, MoreHorizontal, FolderKanban } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import {
@@ -27,15 +27,24 @@ interface ProjectCardProps {
     }
 }
 
+// Deterministic pseudo-random from string — fixes SSR hydration mismatch
+function deterministicProgress(id: string): number {
+    let hash = 0
+    for (let i = 0; i < id.length; i++) {
+        hash = (hash * 31 + id.charCodeAt(i)) >>> 0
+    }
+    return (hash % 81) + 10 // always 10–90
+}
+
 export function ProjectCard({ project }: ProjectCardProps) {
     const [open, setOpen] = useState(false)
 
-    const progress = project.progress || Math.floor(Math.random() * 100)
+    const progress = project.progress ?? deterministicProgress(project.id)
 
     return (
         <>
             <Card
-                className="group relative flex flex-col transition-all duration-300 hover:shadow-lg hover:-translate-y-1 cursor-pointer bg-card border-border"
+                className="group relative flex flex-col cursor-pointer bg-card border-border transition-[transform,box-shadow] duration-200 ease-out hover:shadow-md hover:-translate-y-0.5 active:scale-[0.99] active:transition-none"
                 onClick={() => setOpen(true)}
             >
                 <CardHeader className="pb-3">

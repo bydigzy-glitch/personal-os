@@ -15,18 +15,21 @@ export type Database = {
                     display_name: string | null
                     avatar_url: string | null
                     created_at: string
+                    email: string | null
                 }
                 Insert: {
                     id: string
                     display_name?: string | null
                     avatar_url?: string | null
                     created_at?: string
+                    email?: string | null
                 }
                 Update: {
                     id?: string
                     display_name?: string | null
                     avatar_url?: string | null
                     created_at?: string
+                    email?: string | null
                 }
                 Relationships: []
             }
@@ -462,6 +465,46 @@ export type Database = {
                     created_at?: string
                 }
                 Relationships: []
+            },
+            friendships: {
+                Row: {
+                    id: string
+                    requester_id: string
+                    addressee_id: string
+                    status: 'pending' | 'accepted' | 'declined' | 'blocked'
+                    created_at: string
+                    updated_at: string
+                }
+                Insert: {
+                    id?: string
+                    requester_id: string
+                    addressee_id: string
+                    status?: 'pending' | 'accepted' | 'declined' | 'blocked'
+                    created_at?: string
+                    updated_at?: string
+                }
+                Update: {
+                    id?: string
+                    requester_id?: string
+                    addressee_id?: string
+                    status?: 'pending' | 'accepted' | 'declined' | 'blocked'
+                    created_at?: string
+                    updated_at?: string
+                }
+                Relationships: [
+                    {
+                        foreignKeyName: "friendships_requester_id_fkey"
+                        columns: ["requester_id"]
+                        referencedRelation: "users"
+                        referencedColumns: ["id"]
+                    },
+                    {
+                        foreignKeyName: "friendships_addressee_id_fkey"
+                        columns: ["addressee_id"]
+                        referencedRelation: "users"
+                        referencedColumns: ["id"]
+                    }
+                ]
             }
         }
         Views: {
@@ -476,6 +519,12 @@ export type Database = {
                     user_id: string
                     score: number
                 }[]
+            },
+            get_or_create_dm_conversation: {
+                Args: {
+                    target_user_id: string
+                }
+                Returns: string
             }
         }
         Enums: {

@@ -83,7 +83,7 @@ export function DashboardLayout({ children, user }: DashboardLayoutProps) {
                             key={item.name}
                             href={item.href}
                             className={cn(
-                                'flex items-center justify-between px-3 py-2 text-sm font-medium rounded-lg transition-colors group',
+                                'flex items-center justify-between px-3 py-2 text-sm font-medium rounded-lg transition-[background-color,color] duration-150 ease-out group',
                                 isActive
                                     ? 'bg-accent text-accent-foreground'
                                     : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'

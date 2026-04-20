@@ -41,7 +41,7 @@ export function FileCard({ file }: FileCardProps) {
     return (
         <>
             <Card
-                className="group relative overflow-hidden transition-all duration-300 hover:shadow-md cursor-pointer bg-card border-border"
+                className="group relative overflow-hidden cursor-pointer bg-card border-border transition-[transform,box-shadow] duration-200 ease-out hover:shadow-md hover:-translate-y-0.5 active:scale-[0.99] active:transition-none"
                 onClick={() => setOpen(true)}
             >
                 <CardContent className="p-4 flex items-center gap-4">

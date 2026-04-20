@@ -32,7 +32,7 @@ export function AppCard({ app }: AppCardProps) {
     return (
         <>
             <Card
-                className="group relative overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1 cursor-pointer bg-card border-border"
+                className="group relative overflow-hidden cursor-pointer bg-card border-border transition-[transform,box-shadow] duration-200 ease-out hover:shadow-md hover:-translate-y-0.5 active:scale-[0.99] active:transition-none"
                 onClick={() => setOpen(true)}
             >
                 <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
