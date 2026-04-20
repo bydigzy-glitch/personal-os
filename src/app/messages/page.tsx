@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { DashboardLayout } from '@/components/dashboard/dashboard-layout'
@@ -15,7 +15,7 @@ import { AddFriendDialog } from '../../components/friends/add-friend-dialog'
 import { FriendRequestList } from '../../components/friends/friend-request-list'
 import { FriendsList } from '../../components/friends/friends-list'
 
-export default function MessagesPage() {
+function MessagesPageContent() {
     const supabase = createClient()
     const router = useRouter()
     const searchParams = useSearchParams()
@@ -83,8 +83,8 @@ export default function MessagesPage() {
                 const dms = userConvs.filter(c => c.type === 'dm')
 
                 // Format DMs to have a "title" which is the Other User's name
-                const formattedDms = dms.map(dm => {
-                    const otherParticipant = dm.conversation_participants.find((p: any) => p.user_id !== user.id)
+                const formattedDms = dms.map((dm: any) => {
+                    const otherParticipant = dm.conversation_participants?.find((p: any) => p.user_id !== user.id)
                     const otherUser = otherParticipant?.users
                     return {
                         ...dm,
@@ -211,5 +211,13 @@ export default function MessagesPage() {
                 </div>
             </div>
         </DashboardLayout>
+    )
+}
+
+export default function MessagesPage() {
+    return (
+        <Suspense fallback={<DashboardLayout><div className="flex h-[calc(100vh-4rem)] items-center justify-center">Loading messages...</div></DashboardLayout>}>
+            <MessagesPageContent />
+        </Suspense>
     )
 }

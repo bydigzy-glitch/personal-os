@@ -113,7 +113,7 @@ export function ChatWindow({ conversationId, title, type, currentUserId }: ChatW
             .from('messages')
             .insert({
                 conversation_id: conversationId,
-                user_id: currentUserId,
+                sender_id: currentUserId,
                 content: newMessage.trim()
             })
 
