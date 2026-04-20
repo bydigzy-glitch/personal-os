@@ -5,43 +5,27 @@ import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import {
     Home,
-    Calendar,
-    CreditCard,
-    Wrench,
-    FileText,
     FolderKanban,
-    Library,
+    Calendar,
+    Users,
     Settings,
     LogOut,
-    Menu
+    Menu,
+    Search,
+    Plus
 } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Badge } from '@/components/ui/badge'
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { ModeToggle } from '@/components/theme-toggle'
-import { NotificationsMenu } from './notifications-menu'
-import { CommandMenu } from './command-menu'
 
 const navigation = [
-    { name: 'Home', href: '/', icon: Home },
+    { name: 'Dashboard', href: '/', icon: Home },
+    { name: 'Projects', href: '/projects', icon: FolderKanban },
     { name: 'Calendar', href: '/calendar', icon: Calendar },
-    { name: 'Projects', href: '/projects', icon: FolderKanban, badge: '3' },
-    { name: 'Billing', href: '/billing', icon: CreditCard },
-    { name: 'Files', href: '/files', icon: FileText },
-    { name: 'Tools', href: '/tools', icon: Wrench },
-    { name: 'Resources', href: '/resources', icon: Library },
-    { name: 'Settings', href: '/settings', icon: Settings },
+    { name: 'Clients', href: '/clients', icon: Users },
 ]
 
 interface DashboardLayoutProps {
@@ -64,18 +48,18 @@ export function DashboardLayout({ children, user }: DashboardLayoutProps) {
 
     const NavContent = () => (
         <>
-            <div className="h-16 flex items-center px-6 border-b border-border">
-                <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 bg-black dark:bg-white rounded-lg flex items-center justify-center text-white dark:text-black font-black">
-                        F
+            <div className="h-20 flex items-center px-8">
+                <div className="flex items-center gap-3">
+                    <div className="w-6 h-6 bg-foreground rounded-full flex items-center justify-center text-background text-[10px] font-black">
+                        P
                     </div>
-                    <h1 className="text-xl font-bold tracking-tight">
-                        Freelance OS
+                    <h1 className="text-sm font-bold tracking-tight uppercase">
+                        Productive
                     </h1>
                 </div>
             </div>
 
-            <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+            <nav className="flex-1 px-4 py-8 space-y-2">
                 {navigation.map((item) => {
                     const isActive = pathname === item.href
                     return (
@@ -83,62 +67,33 @@ export function DashboardLayout({ children, user }: DashboardLayoutProps) {
                             key={item.name}
                             href={item.href}
                             className={cn(
-                                'flex items-center justify-between px-3 py-2 text-sm font-medium rounded-lg transition-[background-color,color] duration-150 ease-out group',
+                                'flex items-center gap-3 px-4 py-2 text-sm font-medium rounded-xl transition-all duration-300',
                                 isActive
-                                    ? 'bg-accent text-accent-foreground'
-                                    : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
+                                    ? 'bg-foreground text-background scale-[1.02]'
+                                    : 'text-muted-foreground hover:text-foreground hover:translate-x-1'
                             )}
                         >
-                            <div className="flex items-center gap-3">
-                                <item.icon className={cn("w-5 h-5 group-hover:text-foreground", isActive ? "text-foreground" : "text-muted-foreground")} />
-                                <span>{item.name}</span>
-                            </div>
-                            {item.badge && (
-                                <Badge variant="blue" className="ml-auto font-mono">
-                                    {item.badge}
-                                </Badge>
-                            )}
+                            <item.icon className="w-4 h-4" />
+                            <span>{item.name}</span>
                         </Link>
                     )
                 })}
             </nav>
 
-            <div className="p-4 border-t border-border mt-auto">
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <button className="flex items-center gap-3 w-full p-2 rounded-lg hover:bg-accent transition-colors outline-none">
-                            <Avatar className="w-10 h-10">
-                                <AvatarImage src={user?.avatar_url || ''} />
-                                <AvatarFallback className="bg-primary text-primary-foreground">
-                                    {(user?.display_name || 'User').charAt(0).toUpperCase()}
-                                </AvatarFallback>
-                            </Avatar>
-                            <div className="flex-1 text-left hidden sm:block">
-                                <p className="text-sm font-medium">
-                                    {user?.display_name || 'User'}
-                                </p>
-                                <Badge variant="amber" className="mt-1 text-[10px] h-4 font-bold tracking-widest uppercase">
-                                    Pro
-                                </Badge>
-                            </div>
-                        </button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-56">
-                        <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem asChild>
-                            <Link href="/settings" className="cursor-pointer">
-                                <Settings className="w-4 h-4 mr-2" />
-                                Settings
-                            </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-destructive focus:text-destructive">
-                            <LogOut className="w-4 h-4 mr-2" />
-                            Sign out
-                        </DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
+            <div className="p-6 border-t border-border mt-auto">
+                <button className="flex items-center gap-3 w-full p-2 rounded-xl group transition-all">
+                    <Avatar className="w-8 h-8 ring-2 ring-transparent group-hover:ring-foreground/10 transition-all">
+                        <AvatarImage src={user?.avatar_url || ''} />
+                        <AvatarFallback className="bg-muted text-foreground text-xs">
+                            {(user?.display_name || 'U').charAt(0)}
+                        </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1 text-left">
+                        <p className="text-xs font-bold leading-tight truncate">
+                            {user?.display_name || 'Account'}
+                        </p>
+                    </div>
+                </button>
             </div>
         </>
     )
@@ -153,25 +108,20 @@ export function DashboardLayout({ children, user }: DashboardLayoutProps) {
             {/* Main Content */}
             <div className="flex-1 flex flex-col overflow-hidden">
                 {/* Header */}
-                <header className="h-16 border-b border-border flex items-center px-6 gap-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-                    {/* Mobile Menu Trigger */}
-                    <Sheet>
-                        <SheetTrigger asChild>
-                            <Button variant="ghost" size="icon" className="lg:hidden">
-                                <Menu className="w-5 h-5" />
-                            </Button>
-                        </SheetTrigger>
-                        <SheetContent side="left" className="p-0 w-72">
-                            <NavContent />
-                        </SheetContent>
-                    </Sheet>
-
-                    <div className="flex-1 max-w-2xl">
-                        <CommandMenu />
+                <header className="h-20 flex items-center px-8 gap-6 justify-between">
+                    <div className="flex-1 max-w-md relative group">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-foreground transition-colors" />
+                        <input 
+                            placeholder="Universal search..." 
+                            className="w-full h-10 pl-10 pr-4 bg-muted/50 border border-transparent focus:border-border rounded-xl text-sm outline-none transition-all"
+                        />
                     </div>
 
-                    <div className="flex items-center gap-2 ml-auto">
-                        <NotificationsMenu />
+                    <div className="flex items-center gap-4">
+                        <Button variant="outline" size="sm" className="hidden sm:flex rounded-xl font-bold gap-2">
+                             <Plus className="w-4 h-4" />
+                             New Action
+                        </Button>
                         <ModeToggle />
                     </div>
                 </header>
