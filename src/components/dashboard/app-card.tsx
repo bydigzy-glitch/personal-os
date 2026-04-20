@@ -46,7 +46,9 @@ export function AppCard({ app }: AppCardProps) {
                         </div>
                         <div>
                             <CardTitle className="text-base font-semibold">{app.name}</CardTitle>
-                            <CardDescription className="text-xs line-clamp-1">{app.category || 'Tool'}</CardDescription>
+                            <div className="mt-1">
+                                <Badge variant="emerald" className="text-[10px] px-2 h-4 tracking-wide font-semibold">{app.category || 'Tool'}</Badge>
+                            </div>
                         </div>
                     </div>
 

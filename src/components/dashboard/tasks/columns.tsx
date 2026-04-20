@@ -75,9 +75,15 @@ export const columns: ColumnDef<Task>[] = [
         header: "Status",
         cell: ({ row }) => {
             const status = row.getValue("status") as string
+            const getTaskStatusVariant = (s: string) => {
+                const norm = (s || '').toLowerCase()
+                if (norm === 'done') return 'emerald'
+                if (norm === 'in_progress') return 'blue'
+                return 'secondary'
+            }
             return (
                 <div className="flex w-[100px] items-center">
-                    <Badge variant={status === 'done' ? 'default' : 'secondary'} className="capitalize">
+                    <Badge variant={getTaskStatusVariant(status) as any} className="capitalize tracking-wide px-2 h-5 text-[10px] font-semibold">
                         {(status || 'todo').replace('_', ' ')}
                     </Badge>
                 </div>

@@ -94,7 +94,7 @@ export function DashboardLayout({ children, user }: DashboardLayoutProps) {
                                 <span>{item.name}</span>
                             </div>
                             {item.badge && (
-                                <Badge variant="secondary" className="ml-auto">
+                                <Badge variant="blue" className="ml-auto font-mono">
                                     {item.badge}
                                 </Badge>
                             )}
@@ -117,7 +117,7 @@ export function DashboardLayout({ children, user }: DashboardLayoutProps) {
                                 <p className="text-sm font-medium">
                                     {user?.display_name || 'User'}
                                 </p>
-                                <Badge variant="secondary" className="mt-1 text-[10px] h-4">
+                                <Badge variant="amber" className="mt-1 text-[10px] h-4 font-bold tracking-widest uppercase">
                                     Pro
                                 </Badge>
                             </div>

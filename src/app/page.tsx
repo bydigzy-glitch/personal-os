@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Plus } from 'lucide-react'
 import Link from 'next/link'
 import { DashboardTasks } from '@/components/dashboard/dashboard-tasks'
+import { CreateProjectDialog } from '@/components/projects/create-project-dialog'
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -90,10 +91,7 @@ export default async function DashboardPage() {
               Ready to create something amazing today?
             </p>
           </div>
-          <Button className="bg-primary text-primary-foreground hover:bg-primary/90 gap-2">
-            <Plus className="w-4 h-4" />
-            New Project
-          </Button>
+          <CreateProjectDialog />
         </div>
 
         {/* Tasks Section (New) */}

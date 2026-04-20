@@ -41,6 +41,17 @@ export function ProjectCard({ project }: ProjectCardProps) {
 
     const progress = project.progress ?? deterministicProgress(project.id)
 
+    const getStatusVariant = (status: string | null | undefined) => {
+        switch (status?.toLowerCase()) {
+            case 'completed': return 'emerald'
+            case 'in progress': return 'blue'
+            case 'active': return 'blue'
+            case 'planning': return 'purple'
+            case 'on hold': return 'amber'
+            default: return 'secondary'
+        }
+    }
+
     return (
         <>
             <Card
@@ -89,7 +100,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
                         <Calendar className="w-3 h-3" />
                         {project.due_date ? new Date(project.due_date).toLocaleDateString() : 'No deadline'}
                     </div>
-                    <Badge variant={project.status === 'Completed' ? 'default' : 'secondary'} className="text-[10px] px-2 h-5">
+                    <Badge variant={getStatusVariant(project.status) as any} className="text-[10px] px-2 h-5 tracking-wide">
                         {project.status || 'Active'}
                     </Badge>
                 </CardFooter>
