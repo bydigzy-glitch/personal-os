@@ -9,6 +9,54 @@
 
 ---
 
+## WHICH PROVIDER TO SIGN UP FOR — the actual decision
+
+**Answer: fal.ai.** Keep OpenRouter for text/LLM work; add fal for images and video.
+
+### Why not just stay on OpenRouter
+
+OpenRouter is fine and it is *not* Gemini-only — that's a wrong impression from looking at the
+LLM model list instead of `openrouter.ai/collections/image-models`. It carries Nano Banana 2,
+Nano Banana 2 Lite, Seedream 4.5 (flat $0.04/image, 1K/2K/4K, 18 aspect ratios), FLUX, GPT Image,
+Grok Imagine, Recraft, and video via Seedance 2.0 Mini / 2.5 and Veo 3.1 Lite.
+
+Its actual gaps, for this use case specifically:
+
+- **No dedicated virtual try-on models.** No Kolors try-on, no FASHN. For a fitroom build this is
+  the disqualifier — it's the whole product category.
+- **No Nano Banana Pro** (only the 2 / 2 Lite tier), which is the model that holds a printed
+  graphic together.
+- **No Kling** on video — you get Veo and Seedance instead.
+
+### Coverage matrix
+
+| | fal.ai | OpenRouter | kie.ai |
+|---|---|---|---|
+| Nano Banana Pro | Yes | No | Yes ($0.09) |
+| Nano Banana 2 / Lite | Yes | Yes | Yes |
+| Seedream 5.0 | Yes | 4.5 only | Yes |
+| Kling (video) | Yes (Kling 3) | No | Yes |
+| Veo 3.1 | Yes | Lite only | Yes |
+| **Kolors virtual try-on** | **Yes** | No | No |
+| **FASHN try-on** | **Yes** | No | No |
+| LLMs / text | No | Yes | Some |
+
+fal is the only one of the three carrying the dedicated try-on models *and* Nano Banana Pro *and*
+Kling. For a fitroom that is the deciding factor — the try-on endpoints are the product.
+
+### The stack
+
+1. **fal.ai** — primary, for all image + video + try-on. One key, one SDK.
+2. **OpenRouter** — keep for text/LLM. No reason to cancel it.
+3. **kie.ai** — optional, add later only if image spend becomes material (~30–50% cheaper on
+   Nano Banana Pro at $0.09/1–2K, credits don't expire, failed jobs aren't charged). Not worth
+   the second integration until volume justifies it.
+
+Do not split image generation across two providers on day one. Ship on fal, measure real spend
+for a month, then decide whether the cheaper route is worth the extra integration.
+
+---
+
 ## TL;DR
 
 There are **two different products** being compared here, and they are not priced the same way:
@@ -164,7 +212,8 @@ with a reference sheet and accept the retry rate.
 ## F. Provider / routing notes
 
 - **fal.ai** — best try-on catalogue, typically 30–50% cheaper than Replicate, reliable. Good default.
-- **OpenRouter** — one key across Seedream + Gemini image models; easiest for A/B testing models.
+- **OpenRouter** — Gemini image family, Seedream 4.5, FLUX, GPT Image, plus Seedance/Veo Lite video.
+  No Nano Banana Pro, no Kling, and no dedicated try-on models. Best kept for text/LLM work.
 - **kie.ai / WaveSpeed / PiAPI / CometAPI** — cheaper again; WaveSpeed advertises 99.99% uptime
   and SOC 2 Type II. Reasonable for production if you keep a fallback.
 - **Google AI Studio / Vertex direct** — highest price, but batch mode halves it and you get a
@@ -204,3 +253,8 @@ to swap providers cheaply is worth more than any single provider's current disco
 - https://costbench.com/software/ai-media-apis/kling-api/
 - https://wavespeed.ai/models/wavespeed-ai/qwen-image/edit
 - https://www.atlascloud.ai/blog/guides/cheapest-ai-image-generation-api-2026
+- https://fal.ai/explore/models
+- https://fal.ai/tools/ai-video-generator
+- https://openrouter.ai/collections/image-models
+- https://openrouter.ai/collections/video-models
+- https://www.bitdoze.com/kie-ai-review/
